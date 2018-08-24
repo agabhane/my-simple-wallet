@@ -1,0 +1,20 @@
+.title {
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.9rem;
+}
+
+.transaction-group-item .data {
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+}
+
+.transaction-group-item .group-name {
+    border-left: 3px solid;
+    padding-left: 5px; 
+    line-height: 1rem;
+}
+
+.transaction-group-item table {
+    font-size: 0.9rem;
+}
