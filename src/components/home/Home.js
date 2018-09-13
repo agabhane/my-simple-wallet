@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Balance from './balance/Balance';
 import TransactionGroup from './transactions/TransactionGroup';
+import ChartComponent from './chart/chart';
 
 import { DateTime } from 'luxon';
 import { budget, transactions } from '../../db/db';
@@ -15,7 +16,9 @@ class Home extends Component {
         super(props);
         this.today = DateTime.local();
         this.state = {
-            trxGroup: []
+            trxGroup: [],
+            trxDisplayMode: 'TRANSACTION-LIST',
+            month: this.today.month
         }
     }
 
@@ -59,6 +62,12 @@ class Home extends Component {
             });
     }
 
+    trxDisplayModeChange(value) {
+        this.setState({
+            trxDisplayMode: value
+        });
+    }
+
     render() {
         let income = 0, expense = 0, totalBudget = 0;
         _.forEach(this.state.trxGroup, (trxGrp) => {
@@ -66,16 +75,32 @@ class Home extends Component {
                 income += trxGrp.trxSum
             } else {
                 expense += trxGrp.trxSum;
-                if (trxGrp.amount > 0) {
-                    totalBudget += trxGrp.amount;
-                }
+                totalBudget += Math.max(trxGrp.amount ? trxGrp.amount : 0, trxGrp.trxSum);
             }
         });
 
         return (
             <div className="home container">
                 <Balance income={income} expense={expense} totalBudget={totalBudget} />
-                <TransactionGroup trxGroup={this.state.trxGroup} />
+                <div className="d-flex mt-3 justify-content-between align-items-center">
+                    <div className="title">Income &amp; Spendings</div>
+                    <div className="btn-group btn-group-toggle" data-toggle="buttons">
+                        <label className="btn btn-secondary btn-sm active"
+                            onClick={()=>this.trxDisplayModeChange('TRANSACTION-LIST')}>
+                            <input type="radio" name="trxDisplayMode" value="TRANSACTION-LIST"/>
+                                <i className="fa fa-list" aria-hidden="true"></i>
+                        </label>
+                        <label className="btn btn-secondary btn-sm"
+                            onClick={()=>this.trxDisplayModeChange('CHART')}>
+                            <input type="radio" name="trxDisplayMode" value="CHART"/>
+                                <i className="fa fa-pie-chart" aria-hidden="true"></i>
+                        </label>
+                    </div>
+                </div>
+                {
+                    this.state.trxDisplayMode === 'TRANSACTION-LIST' ? <TransactionGroup trxGroup={this.state.trxGroup} /> : <ChartComponent trxGroup={this.state.trxGroup}/>
+
+                }
             </div>
         );
     }

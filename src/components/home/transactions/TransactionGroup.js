@@ -31,7 +31,6 @@ class TransactionGroup extends Component {
 
         return (
             <div className="mt-3 mb-3">
-                <h6 className="title">Income & Spendings</h6>
                 <ul className="list-group">
                     {groupList}
                 </ul>

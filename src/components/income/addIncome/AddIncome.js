@@ -17,6 +17,7 @@ class AddIncome extends Component {
         };
         this.updateProperty = this.updateProperty.bind(this);
         this.addNewIncome = this.addNewIncome.bind(this);
+        this.goBack = this.goBack.bind(this);
     }
 
     fetchIncomeBudget() {
@@ -60,8 +61,12 @@ class AddIncome extends Component {
         })
         .then((id)=>{
             console.log(`[success] add income (${id})`);
-            this.props.history.push('/');
+            this.goBack();
         });
+    }
+
+    goBack() {
+        this.props.history.goBack();
     }
 
     render() {
@@ -95,7 +100,8 @@ class AddIncome extends Component {
                             onChange={(e) => { this.updateProperty('date', e.target.value) }} />
                     </div>
                     <div className="d-flex justify-content-center">
-                        <button type="button" className="btn btn-outline-primary mr-3 btn-block">Cancel</button>
+                        <button type="button" className="btn btn-outline-primary mr-3 btn-block"
+                            onClick={this.goBack}>Cancel</button>
                         <button type="button" className="btn btn-primary btn-block mt-0"
                         onClick={this.addNewIncome}>Save</button>
                     </div>

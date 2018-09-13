@@ -18,6 +18,7 @@ class AddBudget extends Component {
 
         this.updateProperty = this.updateProperty.bind(this);
         this.addNewBudget = this.addNewBudget.bind(this);
+        this.goBack = this.goBack.bind(this);
     }
 
     updateProperty(property, value) {
@@ -40,11 +41,15 @@ class AddBudget extends Component {
         }
     }
 
+    goBack() {
+        this.props.history.goBack();
+    }
+
     addNewBudget() {
         budget.add({ ...this.state })
             .then((id) => {
                 console.log(`[success] add budget (${id})`);
-                this.props.history.push('/');
+                this.goBack();
             });
     }
 
@@ -73,7 +78,8 @@ class AddBudget extends Component {
                         <label htmlFor="cbIsRecurring" className="form-check-label">Is Recurring</label>
                     </div>
                     <div className="d-flex justify-content-center mt-3">
-                        <button type="button" className="btn btn-outline-primary mr-3 btn-block">Cancel</button>
+                        <button type="button" className="btn btn-outline-primary mr-3 btn-block"
+                            onClick={this.goBack}>Cancel</button>
                         <button type="button" className="btn btn-primary btn-block mt-0" onClick={this.addNewBudget}>Save</button>
                     </div>
                 </form>

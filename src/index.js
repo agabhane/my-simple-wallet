@@ -7,6 +7,7 @@ import App from './App';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'jquery';
 import 'bootstrap/dist/js/bootstrap';
+import 'font-awesome/css/font-awesome.css';
 
 import db from './db/db';
 db.initialize();
