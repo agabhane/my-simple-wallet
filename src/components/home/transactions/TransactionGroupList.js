@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import './TransactionGroup.css';
+import './TransactionGroup.scss';
 import TransactionGroupItem from './TransactionGroupItem';
 const _ = require('lodash/collection');
 
-class TransactionGroup extends Component {
+class TransactionGroupList extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -26,7 +26,10 @@ class TransactionGroup extends Component {
         let groupList = _.sortBy(this.props.trxGroup, (group)=>{
             return group.amount === group.trxSum;
         }).map(
-            (group) => <TransactionGroupItem key={group.id} {...group} isOpen={this.state.openGroupId === group.id} toggleGroupOpenClose={this.toggleGroupOpenClose} />
+            (group) => <TransactionGroupItem key={group.id} {...group}
+            isOpen={this.state.openGroupId === group.id}
+            toggleGroupOpenClose={this.toggleGroupOpenClose}
+            markBudgetAsDone={this.props.markBudgetAsDone}/>
         );
 
         return (
@@ -38,4 +41,4 @@ class TransactionGroup extends Component {
         );
     }
 }
-export default TransactionGroup;
+export default TransactionGroupList;

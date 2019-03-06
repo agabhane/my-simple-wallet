@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import Balance from './balance/Balance';
-import TransactionGroup from './transactions/TransactionGroup';
+import TransactionGroupList from './transactions/TransactionGroupList';
 import ChartComponent from './chart/chart';
 
 import { DateTime } from 'luxon';
 import { budget, transactions } from '../../db/db';
 
-import './Home.css';
+import './Home.scss';
 import { Promise } from 'es6-promise';
 let _ = require("lodash/collection");
 let _Math = require('lodash/math');
@@ -20,6 +20,8 @@ class Home extends Component {
             trxDisplayMode: 'TRANSACTION-LIST',
             month: this.today.month
         }
+
+        this.markBudgetAsDone = this.markBudgetAsDone.bind(this);
     }
 
     fetchBudget() {
@@ -54,7 +56,7 @@ class Home extends Component {
         });
     }
 
-    componentDidMount() {
+    fetchData() {
         Promise.all([this.fetchBudget(), this.fetchTrx()])
             .then((response) => {
                 this.groupTransactions(response[0], response[1]);
@@ -62,9 +64,30 @@ class Home extends Component {
             });
     }
 
+    componentDidMount() {
+        this.fetchData();
+    }
+
     trxDisplayModeChange(value) {
         this.setState({
             trxDisplayMode: value
+        });
+    }
+
+    markBudgetAsDone(budget) {
+        let date = this.today,
+            { id, desc, amount } = budget;
+        console.log(`budgetId to be marked as done: ${id}`);
+        transactions.add({
+            year: date.year,
+            month: date.month,
+            date: date.toISODate(),
+            budgetId: id,
+            desc,
+            amount
+        }).then((id) => {
+            console.log(`[success] add expense (${id})`);
+            this.fetchData();
         });
     }
 
@@ -86,19 +109,19 @@ class Home extends Component {
                     <div className="title">Income &amp; Spendings</div>
                     <div className="btn-group btn-group-toggle" data-toggle="buttons">
                         <label className="btn btn-secondary btn-sm active"
-                            onClick={()=>this.trxDisplayModeChange('TRANSACTION-LIST')}>
-                            <input type="radio" name="trxDisplayMode" value="TRANSACTION-LIST"/>
-                                <i className="fa fa-list" aria-hidden="true"></i>
+                            onClick={() => this.trxDisplayModeChange('TRANSACTION-LIST')}>
+                            <input type="radio" name="trxDisplayMode" value="TRANSACTION-LIST" />
+                            <i className="fa fa-list" aria-hidden="true"></i>
                         </label>
                         <label className="btn btn-secondary btn-sm"
-                            onClick={()=>this.trxDisplayModeChange('CHART')}>
-                            <input type="radio" name="trxDisplayMode" value="CHART"/>
-                                <i className="fa fa-pie-chart" aria-hidden="true"></i>
+                            onClick={() => this.trxDisplayModeChange('CHART')}>
+                            <input type="radio" name="trxDisplayMode" value="CHART" />
+                            <i className="fa fa-pie-chart" aria-hidden="true"></i>
                         </label>
                     </div>
                 </div>
                 {
-                    this.state.trxDisplayMode === 'TRANSACTION-LIST' ? <TransactionGroup trxGroup={this.state.trxGroup} /> : <ChartComponent trxGroup={this.state.trxGroup}/>
+                    this.state.trxDisplayMode === 'TRANSACTION-LIST' ? <TransactionGroupList trxGroup={this.state.trxGroup} markBudgetAsDone={this.markBudgetAsDone} /> : <ChartComponent trxGroup={this.state.trxGroup} />
 
                 }
             </div>

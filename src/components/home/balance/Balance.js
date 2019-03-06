@@ -1,6 +1,6 @@
 import React from 'react';
 
-import './Balance.css';
+import './Balance.scss';
 
 const Balance = (props) => {
 
