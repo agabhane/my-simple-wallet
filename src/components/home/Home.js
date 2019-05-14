@@ -1,132 +1,121 @@
 import React, { Component } from 'react';
-import Balance from './balance/Balance';
-import TransactionGroupList from './transactions/TransactionGroupList';
-import ChartComponent from './chart/chart';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 
-import { DateTime } from 'luxon';
-import { budget, transactions } from '../../db/db';
+import { withStyles } from '@material-ui/core/styles';
+
+import Balance from './balance/Balance';
+import AddButtonGroup from './addButtonGroup/AddButtonGroup';
+import CategoryTile from '../common/category/CategoryTile';
+
+import { getTransactionGroups as getTransactionGroupsAction } from '../../actions/transactionActions';
 
 import './Home.scss';
-import { Promise } from 'es6-promise';
-let _ = require("lodash/collection");
-let _Math = require('lodash/math');
+import _forEach from 'lodash/forEach';
+
+const styles = {
+    categoriesWrapper: {
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: 0,
+        overflowX: 'auto',
+
+        '& h4': {
+            color: '#333',
+            fontWeight: '500',
+            textTransform: 'uppercase',
+            letterSpacing: '2px'
+        }
+    },
+    categories: {
+        flex: 1,
+        display: 'inline-grid',
+        gridTemplateRows: 'repeat(auto-fill, 100px)',
+        gridAutoColumns: '100px',
+        gridAutoFlow: 'column',
+        gridGap: '15px',
+        padding: '0 1em 1em 2em',
+    },
+    categoryTile:  {
+        background: '#fff',
+        color: '#000',
+        padding: '10px',
+        borderRadius: '3px',
+        boxShadow: '1px 1px 10px 1px rgba(0, 0, 0, 0.1)',
+        display: 'flex',
+        justifyContent: 'flex-end',
+        flexDirection: 'column',
+        fontSize: '1em',
+        fontWeight: '500',
+        border: '1px solid #f1f1f1',
+
+        '& .budget': {
+            color: '#aaa'
+        },
+
+        '& .name': {
+            color: '#333'
+        }
+    }
+}
 
 class Home extends Component {
-    constructor(props) {
-        super(props);
-        this.today = DateTime.local();
-        this.state = {
-            trxGroup: [],
-            trxDisplayMode: 'TRANSACTION-LIST',
-            month: this.today.month
-        }
-
-        this.markBudgetAsDone = this.markBudgetAsDone.bind(this);
-    }
-
-    fetchBudget() {
-        return budget
-            .filter((budget) => {
-                return ((budget.year === this.today.year && budget.month === this.today.month) || budget.isRecurring)
-            })
-            .toArray()
-            .then(budget => budget);
-    }
-
-    fetchTrx() {
-        return transactions
-            .where({
-                year: this.today.year,
-                month: this.today.month
-            })
-            .toArray()
-            .then(transactions => transactions);
-    }
-
-    groupTransactions(budget, trx) {
-        let trxGroup = [];
-        _.forEach(budget, (budget) => {
-            let budgetGrp = { ...budget };
-            budgetGrp.trx = _.filter(trx, { 'budgetId': budget.id });
-            budgetGrp.trxSum = _Math.sumBy(budgetGrp.trx, 'amount');
-            trxGroup.push(budgetGrp);
-        });
-        this.setState({
-            trxGroup
-        });
-    }
-
-    fetchData() {
-        Promise.all([this.fetchBudget(), this.fetchTrx()])
-            .then((response) => {
-                this.groupTransactions(response[0], response[1]);
-
-            });
-    }
 
     componentDidMount() {
-        this.fetchData();
-    }
-
-    trxDisplayModeChange(value) {
-        this.setState({
-            trxDisplayMode: value
-        });
-    }
-
-    markBudgetAsDone(budget) {
-        let date = this.today,
-            { id, desc, amount } = budget;
-        console.log(`budgetId to be marked as done: ${id}`);
-        transactions.add({
-            year: date.year,
-            month: date.month,
-            date: date.toISODate(),
-            budgetId: id,
-            desc,
-            amount
-        }).then((id) => {
-            console.log(`[success] add expense (${id})`);
-            this.fetchData();
-        });
+        this.props.getTransactionGroups();
     }
 
     render() {
         let income = 0, expense = 0, totalBudget = 0;
-        _.forEach(this.state.trxGroup, (trxGrp) => {
+        _forEach(this.props.transactionGroups, (trxGrp) => {
             if (trxGrp.type === 'INCOME') {
-                income += trxGrp.trxSum
+                income += trxGrp.transactionsSum
             } else {
-                expense += trxGrp.trxSum;
-                totalBudget += Math.max(trxGrp.amount ? trxGrp.amount : 0, trxGrp.trxSum);
+                expense += trxGrp.transactionsSum;
+                totalBudget += Math.max(trxGrp.amount ? trxGrp.amount : 0, trxGrp.transactionsSum);
             }
         });
 
-        return (
-            <div className="home container">
-                <Balance income={income} expense={expense} totalBudget={totalBudget} />
-                <div className="d-flex mt-3 justify-content-between align-items-center">
-                    <div className="title">Income &amp; Spendings</div>
-                    <div className="btn-group btn-group-toggle" data-toggle="buttons">
-                        <label className="btn btn-secondary btn-sm active"
-                            onClick={() => this.trxDisplayModeChange('TRANSACTION-LIST')}>
-                            <input type="radio" name="trxDisplayMode" value="TRANSACTION-LIST" />
-                            <i className="fa fa-list" aria-hidden="true"></i>
-                        </label>
-                        <label className="btn btn-secondary btn-sm"
-                            onClick={() => this.trxDisplayModeChange('CHART')}>
-                            <input type="radio" name="trxDisplayMode" value="CHART" />
-                            <i className="fa fa-pie-chart" aria-hidden="true"></i>
-                        </label>
-                    </div>
-                </div>
-                {
-                    this.state.trxDisplayMode === 'TRANSACTION-LIST' ? <TransactionGroupList trxGroup={this.state.trxGroup} markBudgetAsDone={this.markBudgetAsDone} /> : <ChartComponent trxGroup={this.state.trxGroup} />
+        const { classes } = this.props;
 
-                }
+        return (
+            <div className="home-wrapper">
+                <div className="backdrop"></div>
+                <div className="frontdrop">
+                    <header className="container">
+                        <h1>My money</h1>
+                        <AddButtonGroup></AddButtonGroup>
+                    </header>
+                    <main>
+                        <div className="container">
+                            <Balance income={income} expense={expense} totalBudget={totalBudget}></Balance>
+                        </div>
+                        <div className={classes.categoriesWrapper}>
+                            <h4 className="container">Category-wise spendings</h4>
+                            <div className={classes.categories}>
+                                {
+                                    this.props.transactionGroups.map(group => (
+                                        <CategoryTile className={classes.categoryTile} category={group} key={group.id}></CategoryTile>
+                                    ))
+                                }
+                            </div>
+                        </div>
+                    </main>
+                </div>
             </div>
         );
     }
 }
 
-export default Home;
+const mapStateToProp = (state) => ({
+    transactionGroups: state.transactions.groups
+})
+
+const mapDispatchToProp = (dispatch) => ({
+    getTransactionGroups() {
+        dispatch(getTransactionGroupsAction());
+    }
+})
+
+export default withRouter(connect(mapStateToProp, mapDispatchToProp)(withStyles(styles)(Home)));

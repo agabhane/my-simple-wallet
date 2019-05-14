@@ -1,26 +1,60 @@
 import React, { Component } from 'react';
-import { Route, Switch } from 'react-router-dom'
+import { connect } from 'react-redux';
+import { Route, withRouter, Switch } from 'react-router-dom';
+import firebase from 'firebase/app';
+import 'firebase/auth';
 
-import Header from './components/header/Header';
 import Home from './components/home/Home';
 import AddIncome from './components/income/addIncome/AddIncome';
-import AddBudget from './components/budget/addBudget/AddBudget';
+import CategoriesContainer from './components/category/CategoriesContainer';
+import EditCategoryContainer from './components/category/EditCategoryContainer';
 import AddExpense from './components/expense/addExpense/AddExpense';
+import Auth from './components/auth/Auth';
+
+import { SET_USER } from './actions/types';
+import { initializeFirebaseApp } from './firebase/firebaseInitialize';
 
 class App extends Component {
-  render() {
-    return (
-      <div>
-        <Header />
-        <Switch>
-          <Route path="/" exact component={Home} />
-          <Route path="/income" component={AddIncome} />
-          <Route path="/budget" component={AddBudget} />
-          <Route path="/expense" component={AddExpense} /> 
-        </Switch>
-      </div>
-    );
-  }
+    componentWillMount() {
+        initializeFirebaseApp();
+        firebase.auth().onAuthStateChanged(user => {
+            if (user) {
+                let { displayName, email, emailVerified, phoneNumber, photoURL, uid } = user;
+                this.props.setUser({
+                    displayName,
+                    email,
+                    emailVerified,
+                    phoneNumber,
+                    photoURL,
+                    uid
+                });
+            } else {
+                this.props.history.push('/auth');
+            }
+        })
+    }
+
+    render() {
+        return (
+            <Switch>
+                <Route path="/" exact component={Home} />
+                <Route path="/income/:step" component={AddIncome} />
+                <Route path="/categories/:id" component={EditCategoryContainer} />
+                <Route path="/categories" component={CategoriesContainer} />
+                <Route path="/expense/:step" component={AddExpense} />
+                <Route path="/auth" component={Auth} />
+            </Switch >
+        );
+    }
 }
 
-export default App;
+const mapDispatchToProps = (dispatch) => ({
+    setUser: (user) => {
+        dispatch({
+            type: SET_USER,
+            payload: user
+        })
+    }
+});
+
+export default withRouter(connect(null, mapDispatchToProps)(App));

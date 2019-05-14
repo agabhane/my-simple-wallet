@@ -1,4 +1,5 @@
 import React from 'react';
+import { DateTime } from 'luxon';
 
 import './Balance.scss';
 
@@ -6,26 +7,40 @@ const Balance = (props) => {
 
     let future = props.income - props.totalBudget;
     let actual = props.income - props.expense;
-    
+
+    const localizeValue = function (value) {
+        return value > 100000 ? ((value / 1000).toFixed()) + 'K' : value.toLocaleString();
+    };
+
+    let today = DateTime.local();
+
     return (
-        <div className="mt-3 d-flex justify-content-between">
-            <div className="flex-fill stat-box text-center">
-                <div className="field-value">{future > 100000 ? ((future/1000).toFixed()) + 'K' : future.toLocaleString()}</div>
-                <div className="field-label">Future</div>
+        <React.Fragment>
+            <div className="month-end-balance">
+                <div className="month-wrapper">
+                    <div className="year">{today.year}</div>
+                    <div className="month">{today.monthLong}</div>
+                </div>
+                <div className="balance">
+                    <div className="label">Total</div>
+                    <div className="value">{localizeValue(future)}</div>
+                </div>
             </div>
-            <div className="flex-fill stat-box text-center">
-                <div className="field-value">{actual > 100000 ? ((actual/1000).toFixed()) + 'K' : actual.toLocaleString()}</div>
-                <div className="field-label">Actual</div>
+            <div className="month-snapshot">
+                <div className="tile">
+                    <div className="label">Income</div>
+                    <div className="value">{localizeValue(props.income)}</div>
+                </div>
+                <div className="tile">
+                    <div className="label">Expenses</div>
+                    <div className="value">{localizeValue(props.expense)}</div>
+                </div>
+                <div className="tile">
+                    <div className="label">Balance</div>
+                    <div className="value">{localizeValue(actual)}</div>
+                </div>
             </div>
-            <div className="flex-fill stat-box text-center">
-                <div className="field-value">{props.income > 100000 ? ((props.income/1000).toFixed()) + 'K' : props.income.toLocaleString()}</div>
-                <div className="field-label">Income</div>
-            </div>
-            <div className="flex-fill stat-box text-center">
-                <div className="field-value">{props.expense > 100000 ? ((props.expense/1000).toFixed()) + 'K' : props.expense.toLocaleString()}</div>
-                <div className="field-label">Expense</div>
-            </div>
-        </div>
+        </React.Fragment>
     );
 };
 

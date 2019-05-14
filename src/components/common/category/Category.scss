@@ -1,0 +1,48 @@
+.categories-wrapper {
+    flex: 1;
+    min-height: 0;
+    overflow-x: auto;
+}
+.cateories {
+    height: 100%;
+    display: inline-grid;
+    grid-template-rows: repeat(auto-fill, 100px);
+    grid-auto-columns: 120px;
+    grid-auto-flow: column;
+    grid-gap: 10px;
+    padding: 0 2em;
+
+    .category-tile {
+        background: #fff;
+        color: #000;
+        padding: 10px;
+        border-radius: 2px;
+        box-shadow: 0px 0px 20px 1px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: flex-end;
+        flex-direction: column;
+        font-size: 1em;
+        font-weight: 500;
+
+        &.selected {
+            background: linear-gradient(45deg, #22c1c3, #fdbb2d);
+
+            .budget {
+                color: rgba(255,255,255, 0.5);
+            }
+    
+            .name {
+                color: rgba(255,255,255, 1);
+            }
+        }
+
+        .budget {
+            color: #aaa;
+        }
+
+        .name {
+            color: #333;
+        }
+    }
+
+}

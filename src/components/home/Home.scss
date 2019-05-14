@@ -1,10 +1,118 @@
-.home {
-    padding-top: 55px;
-}
+.home-wrapper {
+    height: 100vh;
+    .backdrop {
+        height: 300px;
+        background: #2c3e50;
+        background: linear-gradient(19deg, #3498db, #2c3e50);
 
-.title {
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-size: 0.9rem;
-    font-weight: 500;
+        
+    }
+    .frontdrop {
+        margin-top: -300px;
+        display: grid;
+        grid-template: 100px 1fr / 1fr;
+        height: 100vh;
+
+        .container {
+            margin-left: 2em;
+        }
+
+        header {
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(256, 256, 256, 0.2);
+
+            h1 {
+                font-weight: 500;
+                font-size: 1.2em;
+            }
+
+            .button-group {
+                background-color: transparent;
+                border-width: 0px;
+                color: #fff;
+                font-size: 1em;
+                padding: 8px 10px;
+                border-radius: 2px;
+                background-image: linear-gradient(90deg,rgba(255, 255, 255, 0.5), transparent);
+
+                a {
+                    background: transparent;
+                    border: 0px;
+                    color: white;
+                    margin-right: 5px;
+                    padding: 0 5px;
+                }
+            }
+        }
+
+        main {
+            display: flex;
+            flex-direction: column;
+            margin-right: 1em;
+            overflow: hidden;
+
+            .month-end-balance {
+                height: 120px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                color: #fff;
+                
+                .month-wrapper {
+                    .year {
+                        font-size: 0.8em;
+                    }
+                    .month {
+                        font-size: 1.8em;
+                        font-weight: 500;
+                    }
+                }
+
+                .balance {
+                    text-align: right;
+                    .label {
+                        font-size: 0.8em;
+                        text-transform: uppercase;
+                    }
+                    .value {
+                        font-size: 1.8em;
+                        font-weight: 500;
+                    }
+                }
+            }
+
+            .month-snapshot {
+                display: flex;
+                .tile {
+                    background: #fff;
+                    height: 6em;
+                    margin-right: 1em;
+                    border-radius: 2px;
+                    flex: 1;
+                    padding: 0.5em;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: flex-end;
+                    box-shadow: 0px 0px 15px 3px rgba(0,0,0,0.1);
+
+                    &:last-child {
+                        margin-right: 0;
+                    }
+
+                    .label {
+                        color: #999;
+                        font-size: 0.9em;
+                    }
+
+                    .value {
+                        font-weight: 500;
+                        font-size: 1.2em;
+                    }
+                }
+            }
+        }
+    }
 }
