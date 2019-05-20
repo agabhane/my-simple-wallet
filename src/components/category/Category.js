@@ -10,10 +10,10 @@ const styles = {
         marginBottom: '10px'
     },
     incomeColor: {
-        backgroundColor: 'rgba(0, 200, 0, 0.7)'
+        backgroundColor: '#A5D6A7'
     },
     expenseColor: {
-        backgroundColor: 'rgba(200, 0, 0, 0.7)'
+        backgroundColor: '#EF9A9A'
     }
 };
 
@@ -21,7 +21,7 @@ class Category extends React.PureComponent {
     render() {
         let { name, amount, type, classes } = this.props;
         return (
-            <ListItem>
+            <ListItem divider={true}>
                 <ListItemAvatar>
                     <Avatar className={type === 'INCOME' ? classes.incomeColor : classes.expenseColor }>
                         {

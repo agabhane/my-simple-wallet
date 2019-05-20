@@ -1,5 +1,15 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import IconButton from '@material-ui/core/IconButton';
+import { withStyles } from '@material-ui/core/styles';
+
+const styles = {
+    linkButton: {
+        '& a': {
+            color: 'inherit'
+        }
+    }
+}
 
 class AddButtonGroup extends Component {
     constructor(props) {
@@ -25,29 +35,36 @@ class AddButtonGroup extends Component {
         if (this.state.isExpanded) {
             this.setState({
                 isExpanded: false
-            }); 
+            });
         }
     }
 
     render() {
         var buttonCmp;
+        const { classes } = this.props;
         if (!this.state.isExpanded) {
             buttonCmp = (
-                <button className="button-group" onClick={e => { this.expandButtonGroup(e) }}>
+                <IconButton onClick={e => { this.expandButtonGroup(e) }}>
                     <i className="material-icons">add</i>
-                </button>
+                </IconButton>
             );
         } else {
             buttonCmp = (
-                <div className="button-group">
-                    <Link to="/income/amount"><i className="material-icons">arrow_downward</i></Link>
-                    <Link to="/expense/amount"><i className="material-icons">arrow_upward</i></Link>
-                    <Link to="/categories"><i className="material-icons">bar_chart</i></Link>
-                </div>
+                <React.Fragment>
+                    <IconButton className={classes.linkButton}>
+                        <Link to="/income/amount"><i className="material-icons">arrow_downward</i></Link>
+                    </IconButton>
+                    <IconButton className={classes.linkButton}>
+                        <Link to="/expense/amount"><i className="material-icons">arrow_upward</i></Link>
+                    </IconButton>
+                    <IconButton className={classes.linkButton}>
+                        <Link to="/categories"><i className="material-icons">bar_chart</i></Link>
+                    </IconButton>
+                </React.Fragment>
             );
         }
         return buttonCmp;
     }
 }
 
-export default AddButtonGroup;
+export default withStyles(styles)(AddButtonGroup);

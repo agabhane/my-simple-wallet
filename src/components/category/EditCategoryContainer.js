@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import { withStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
 
 import AppNavBar from '../common/AppNavBar';
 import EditCategory from './EditCategory';
@@ -10,8 +11,16 @@ import { updateCategoryField, resetCategory, saveCategory } from '../../actions/
 
 
 const styles = {
+    page: {
+        height: '100vh',
+    },
+    main: {
+        flex: 1,
+        minHeight: '0px',
+        minWidth: '0px'
+    },
     container: {
-        margin: '80px 2em 2em'
+        margin: '2em'
     }
 }
 
@@ -40,13 +49,16 @@ class EditCategoryContainer extends React.Component {
 
         const { history, classes, category } = this.props;
         return (
-            <React.Fragment>
-                <AppNavBar heading="Add Category" onBack={history.goBack}></AppNavBar>
-                <div className={classes.container}>
-                    <EditCategory className={classes.container} category={category} updateProperty={this.updateProperty} onSaveCategory={this.saveCategory}></EditCategory>
-                </div>
-            </React.Fragment>
-
+            <Grid container direction="column" className={classes.page}>
+                <Grid item>
+                    <AppNavBar heading="Add Category" onBack={history.goBack}></AppNavBar>
+                </Grid>
+                <Grid item className={classes.main}>
+                    <div className={classes.container}>
+                        <EditCategory className={classes.container} category={category} updateProperty={this.updateProperty} onSaveCategory={this.saveCategory}></EditCategory>
+                    </div>
+                </Grid>
+            </Grid>
         );
     }
 }

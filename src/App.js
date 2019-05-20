@@ -4,6 +4,8 @@ import { Route, withRouter, Switch } from 'react-router-dom';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 
+import { withTheme } from '@material-ui/core/styles';
+
 import Home from './components/home/Home';
 import AddIncome from './components/income/addIncome/AddIncome';
 import CategoriesContainer from './components/category/CategoriesContainer';
@@ -36,6 +38,7 @@ class App extends Component {
 
     render() {
         return (
+            <div style={{background: this.props.theme.palette.background.default}}>
             <Switch>
                 <Route path="/" exact component={Home} />
                 <Route path="/income/:step" component={AddIncome} />
@@ -44,6 +47,7 @@ class App extends Component {
                 <Route path="/expense/:step" component={AddExpense} />
                 <Route path="/auth" component={Auth} />
             </Switch >
+            </div>
         );
     }
 }
@@ -57,4 +61,4 @@ const mapDispatchToProps = (dispatch) => ({
     }
 });
 
-export default withRouter(connect(null, mapDispatchToProps)(App));
+export default withRouter(connect(null, mapDispatchToProps)(withTheme()(App)));

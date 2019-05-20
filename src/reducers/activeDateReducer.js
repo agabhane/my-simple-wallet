@@ -1,11 +1,12 @@
 import { SET_ACTIVE_DATE } from '../actions/types';
 import { DateTime } from 'luxon';
 
-const { year, month, day } = DateTime.local();
+const { year, month, day, monthLong } = DateTime.local();
 
 const initialValue = {
     year,
     month,
+    monthLong,
     day
 }
 

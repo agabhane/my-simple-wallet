@@ -2,17 +2,26 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import AppNavBar from '../common/AppNavBar';
 import IconButton from '@material-ui/core/IconButton';
-import List from '@material-ui/core/List';
 import { withStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
 
-import Category from './Category';
+import AppNavBar from '../common/AppNavBar';
+import CategoryList from '../common/category/Categories';
+
 import { getCategories as getCategoriesAction } from '../../actions/categoryActions';
 
 const styles = {
-    listContainer: {
-        marginTop: '60px'
+    page: {
+        height: '100vh',
+    },
+    main: {
+        flex: 1,
+        minHeight: '0px',
+        minWidth: '0px',
+        padding: '10px 10px 10px',
+        overflowX: 'auto',
+        width: '100%'
     }
 };
 
@@ -36,16 +45,14 @@ class Categories extends React.Component {
         const { classes, categories } = this.props;
 
         return (
-            <React.Fragment>
-                <AppNavBar heading="Categories" onBack={this.props.history.goBack} action={addAction}></AppNavBar>
-                <List className={classes.listContainer}>
-                    {
-                        categories.map(category => {
-                            return <Category className={classes.categoryCard} {...category} key={category.id}></Category>
-                        })
-                    }
-                </List>
-            </React.Fragment>
+            <Grid container direction="column" className={classes.page}>
+                <Grid item>
+                    <AppNavBar heading="Categories" onBack={this.props.history.goBack} action={addAction}></AppNavBar>
+                </Grid>
+                <Grid item className={classes.main}>
+                    <CategoryList categories={categories}></CategoryList>
+                </Grid>
+            </Grid>
         );
     }
 }

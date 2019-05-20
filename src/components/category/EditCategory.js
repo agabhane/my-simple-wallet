@@ -31,7 +31,7 @@ class EditCategory extends React.PureComponent {
     render() {
         const { classes, category, updateProperty, onSaveCategory } = this.props;
         return (
-            <Card className={classes.card}>
+            <Card className={classes.card} elevation={1}>
                 <CardContent>
                     <form className={classes.root} autoComplete="off">
                         <FormGroup>

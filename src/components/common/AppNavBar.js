@@ -23,12 +23,15 @@ class AppNavBar extends React.PureComponent {
         const { classes, heading, onBack, action } = this.props;
         return (
             <div className={classes.root}>
-                <AppBar>
+                <AppBar color="default" position="static">
                     <Toolbar>
-                        <IconButton className={classes.menuButton} color="inherit" aria-label="Menu"
-                            onClick={onBack}>
-                            <i className="material-icons">arrow_back</i>
-                        </IconButton>
+                        {
+                            onBack ?
+                                (<IconButton className={classes.menuButton} color="inherit" aria-label="Menu"
+                                    onClick={onBack}>
+                                    <i className="material-icons">arrow_back</i>
+                                </IconButton>) : ''
+                        }
                         <Typography variant="h6" color="inherit" className={classes.grow}>
                             {heading}
                         </Typography>
