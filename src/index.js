@@ -25,7 +25,6 @@ const theme = createMuiTheme({
     },
     typography: { useNextVariants: true }
 });
-
 ReactDOM.render((
     <MuiThemeProvider theme={theme}>
         <Provider store={store}>

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Route, withRouter, Switch } from 'react-router-dom';
-import firebase from 'firebase/app';
 import 'firebase/auth';
 
 import { withTheme } from '@material-ui/core/styles';
@@ -15,38 +14,31 @@ import Auth from './components/auth/Auth';
 
 import { SET_USER } from './actions/types';
 import { initializeFirebaseApp } from './firebase/firebaseInitialize';
+import { onAuthStateChanged } from './firebase/auth/auth';
 
 class App extends Component {
     componentWillMount() {
         initializeFirebaseApp();
-        firebase.auth().onAuthStateChanged(user => {
-            if (user) {
-                let { displayName, email, emailVerified, phoneNumber, photoURL, uid } = user;
-                this.props.setUser({
-                    displayName,
-                    email,
-                    emailVerified,
-                    phoneNumber,
-                    photoURL,
-                    uid
-                });
-            } else {
+        onAuthStateChanged()
+            .then(user => {
+                this.props.setUser(user);
+            })
+            .catch(() => {
                 this.props.history.push('/auth');
-            }
-        })
+            });
     }
 
     render() {
         return (
-            <div style={{background: this.props.theme.palette.background.default}}>
-            <Switch>
-                <Route path="/" exact component={Home} />
-                <Route path="/income/:step" component={AddIncome} />
-                <Route path="/categories/:id" component={EditCategoryContainer} />
-                <Route path="/categories" component={CategoriesContainer} />
-                <Route path="/expense/:step" component={AddExpense} />
-                <Route path="/auth" component={Auth} />
-            </Switch >
+            <div style={{ background: this.props.theme.palette.background.default }}>
+                <Switch>
+                    <Route path="/" exact component={Home} />
+                    <Route path="/income/:step" component={AddIncome} />
+                    <Route path="/categories/:id" component={EditCategoryContainer} />
+                    <Route path="/categories" component={CategoriesContainer} />
+                    <Route path="/expense/:step" component={AddExpense} />
+                    <Route path="/auth" component={Auth} />
+                </Switch >
             </div>
         );
     }

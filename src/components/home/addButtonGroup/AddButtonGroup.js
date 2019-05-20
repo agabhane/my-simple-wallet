@@ -20,15 +20,14 @@ class AddButtonGroup extends Component {
 
         this.expandButtonGroup = this.expandButtonGroup.bind(this);
         this.collapseButtonGroup = this.collapseButtonGroup.bind(this);
-
-        document.body.addEventListener('click', this.collapseButtonGroup);
     }
 
     expandButtonGroup(e) {
-        e.stopPropagation();
         this.setState({
             isExpanded: true
         });
+        e.stopPropagation();
+        e.nativeEvent.stopImmediatePropagation();
     }
 
     collapseButtonGroup() {
@@ -37,6 +36,14 @@ class AddButtonGroup extends Component {
                 isExpanded: false
             });
         }
+    }
+
+    componentDidMount() {
+        document.addEventListener('click', this.collapseButtonGroup);
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener('click', this.collapseButtonGroup);
     }
 
     render() {

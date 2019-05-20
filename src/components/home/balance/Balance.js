@@ -53,7 +53,7 @@ const Balance = (props) => {
                 <div className="value">{activeDate.monthLong}</div>
             </Paper>
             <Paper elevation={1} className={classes.totalBox + ' ' + classes.box}>
-                <div className="label">Total</div>
+                <div className="label">Saving</div>
                 <div className="value">{localizeValue(future)}</div>
             </Paper>
             <Paper elevation={1} className={classes.box}>
