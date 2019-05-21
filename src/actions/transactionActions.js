@@ -22,10 +22,7 @@ export function updateTransactionField(field, value) {
 
 export function resetTransactionField() {
     return {
-        type: RESET_TRANSACTION,
-        payload: {
-            ...store.getState().activeDate,
-        }
+        type: RESET_TRANSACTION
     };
 };
 

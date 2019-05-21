@@ -6,10 +6,11 @@ import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import _forEach from 'lodash/forEach';
+import _sortBy from 'lodash/sortBy';
 
 import Balance from './balance/Balance';
 import AddButtonGroup from './addButtonGroup/AddButtonGroup';
-import Categories from '../common/category/Categories';
+import Categories from '../common/selectCategory/Categories';
 import AppNavBar from '../common/AppNavBar';
 
 import { getTransactionGroups as getTransactionGroupsAction } from '../../actions/transactionActions';
@@ -45,10 +46,18 @@ class Home extends Component {
         this.props.getTransactionGroups();
     }
 
+    onSelectCategory = (category) => {
+        this.props.history.push(`/transactions/${category.id}`);
+    }
+
     render() {
-        const { classes, activeDate, transactionGroups } = this.props;
+        const { classes, activeDate } = this.props;
+        let transactionGroups = this.props.transactionGroups;
         let income = 0, expense = 0, totalBudget = 0;
 
+        transactionGroups = _sortBy(transactionGroups, (group) => {
+            return group.amount === group.transactionsSum ? 1 : 0
+        });
         _forEach(transactionGroups, (trxGrp) => {
             if (trxGrp.type === 'INCOME') {
                 income += trxGrp.transactionsSum
@@ -71,7 +80,7 @@ class Home extends Component {
 
                     <Typography gutterBottom={true} variant="subtitle1" className={classes.container + ' ' + classes.title}>Income and expenses</Typography>
                     <Grid item className={classes.categoriesWrapper}>
-                        <Categories categories={transactionGroups}></Categories>
+                        <Categories categories={transactionGroups} onSelectCategory={this.onSelectCategory}></Categories>
                     </Grid>
                 </Grid>
             </Grid>

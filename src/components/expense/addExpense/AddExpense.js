@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import { DateTime } from 'luxon';
 
 import Amount from '../../common/amount/Amount';
-import Category from "../../common/category/Category";
+import SelectCategory from "../../common/selectCategory/SelectCategory";
 import Description from '../../common/description/Description';
 
 import { getCategories as getCategoriesAction } from '../../../actions/categoryActions';
@@ -19,6 +19,7 @@ import {
 class AddExpense extends Component {
 
     componentDidMount() {
+        this.props.resetTransactionFields();
         this.props.getCategories();
     }
 
@@ -56,11 +57,11 @@ class AddExpense extends Component {
                                 </Amount>;
                             case 'category':
                                 categories = categories.filter(category => category.type === 'EXPENSE');
-                                return <Category onSelectCategory={this.onSelectCategory}
+                                return <SelectCategory onSelectCategory={this.onSelectCategory}
                                     categories={categories}
                                     goBack={this.props.history.goBack}
                                     transaction={transaction}>
-                                </Category>;
+                                </SelectCategory>;
                             case 'desc':
                                 let selectedCaterogy = categories.find(category => category.id === transaction.categoryId);
                                 return <Description goBack={this.props.history.goBack}
@@ -93,7 +94,7 @@ const mapDispatchToProp = dispatch => ({
         }
         dispatch(updateTransactionFieldAction(field, value));
     },
-    resetTransactionField() {
+    resetTransactionFields() {
         dispatch(resetTransactionFieldAction());
     },
     async getCategories() {

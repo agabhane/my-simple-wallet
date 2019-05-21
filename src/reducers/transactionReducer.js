@@ -20,9 +20,7 @@ export default function (state = initialState, action) {
 
         case RESET_TRANSACTION:
             return {
-                ...initialState,
-                year: action.payload.year,
-                month: action.payload.month
+                ...initialState
             }
         default:
             return state;

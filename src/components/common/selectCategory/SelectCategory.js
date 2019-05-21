@@ -29,7 +29,7 @@ const styles = {
     }
 }
 
-class Category extends PureComponent {
+class SelectCategory extends PureComponent {
 
     selectCategory = (category) => {
         this.props.onSelectCategory(category.id);
@@ -56,4 +56,4 @@ class Category extends PureComponent {
     }
 }
 
-export default withStyles(styles)(Category);
+export default withStyles(styles)(SelectCategory);

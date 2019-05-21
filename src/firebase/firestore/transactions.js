@@ -8,10 +8,10 @@ export function addTransaction(transaction) {
     const db = firebase.firestore();
     return db.collection('transactions').add(transaction)
         .then(response => {
-            console.log(response);
             return response;
         }, (error) => {
             console.log(error);
+            return error;
         })
 }
 

@@ -7,10 +7,11 @@ import { withTheme } from '@material-ui/core/styles';
 
 import Home from './components/home/Home';
 import AddIncome from './components/income/addIncome/AddIncome';
-import CategoriesContainer from './components/category/CategoriesContainer';
-import EditCategoryContainer from './components/category/EditCategoryContainer';
+import CategoriesContainer from './components/categories/CategoriesContainer';
+import EditCategoryContainer from './components/categories/EditCategoryContainer';
 import AddExpense from './components/expense/addExpense/AddExpense';
 import Auth from './components/auth/Auth';
+import TrasactionsContainer from './components/transations/TrasactionsContainer';
 
 import { SET_USER } from './actions/types';
 import { initializeFirebaseApp } from './firebase/firebaseInitialize';
@@ -35,6 +36,7 @@ class App extends Component {
                     <Route path="/" exact component={Home} />
                     <Route path="/income/:step" component={AddIncome} />
                     <Route path="/categories/:id" component={EditCategoryContainer} />
+                    <Route path="/transactions/:categoryId" component={TrasactionsContainer} />
                     <Route path="/categories" component={CategoriesContainer} />
                     <Route path="/expense/:step" component={AddExpense} />
                     <Route path="/auth" component={Auth} />

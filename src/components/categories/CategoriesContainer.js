@@ -7,7 +7,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 
 import AppNavBar from '../common/AppNavBar';
-import CategoryList from '../common/category/Categories';
+import CategoryList from '../common/selectCategory/Categories';
 
 import { getCategories as getCategoriesAction } from '../../actions/categoryActions';
 

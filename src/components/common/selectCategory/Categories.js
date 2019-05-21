@@ -30,6 +30,19 @@ const styles = {
             fontSize: '14px',
             letterSpacing: '1px'
         },
+        '& .balance': {
+            color: '#ffffff',
+            flex: 1,
+            fontSize: '16px',
+            '&::before': {
+                content: '""',
+                width: '15px',
+                height: '2px',
+                background: '#ffffff',
+                position: 'absolute',
+                top: '35px'
+            }
+        },
         '& .icon-type': {
             height: '40px',
             width: '40px',
@@ -61,12 +74,20 @@ class Categories extends React.PureComponent {
             <div className={classes.categories}>
                 {
                     categories.map(category => (
-                        <Paper elevation={1} className={classes.categoryTile} key={category.id} onClick={()=> onSelectCategory ? onSelectCategory(category) : ''}>
+                        <Paper elevation={1}
+                            className={classes.categoryTile}
+                            style={{ opacity: category.amount === category.transactionsSum ? '0.5' : '1' }}
+                            key={category.id}
+                            onClick={() => onSelectCategory ? onSelectCategory(category) : ''}>
                             <div className={this.getIconClass(category.type, classes)}>
                                 {
                                     category.type === 'INCOME' ? <i className="material-icons">arrow_downward</i> : <i className="material-icons">arrow_upward</i>
                                 }
                             </div>
+                            {
+                                category.transactionsSum === undefined ? '' :
+                                    <div className="balance">{category.amount - category.transactionsSum}</div>
+                            }
                             <div className="amount">{category.amount}</div>
                             <div className="name">{category.name}</div>
                         </Paper>

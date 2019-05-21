@@ -15,6 +15,7 @@ export async function getCategories() {
     const db = firebase.firestore();
     return db.collection('categories')
         .where("userId", "==", store.getState().auth.user.uid)
+        .orderBy("name")
         .get()
         .then(querySnapshot => {
             let docs = [];
